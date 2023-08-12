@@ -5,13 +5,15 @@ import Session, { getSession } from "./session";
 export type SocketType = "host-data" | "host-control" | "client" | "undecided";
 
 export type NodePacketId = (
-    "connection_type"
+    "connection_type" |
+    "keep_alive"
 );
 
 export type ServerPacketId = (
     "session_details" |
     "new_client" |
-    "client_connected"
+    "client_connected" |
+    "keep_alive"
 );
 
 type Listener = {
@@ -92,6 +94,10 @@ export default class Socket {
                     console.error(e);
                 }
             });
+
+            this.on("keep_alive", async () => {
+                this.send("keep_alive");
+            }, {});
         }
     }
 
